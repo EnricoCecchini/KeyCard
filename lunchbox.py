@@ -4,10 +4,10 @@ import os
 
 # Print option menu
 def mainMenu():
-    options = [1,2,3,4]
+    options = [1,2,3,4,5]
     choice = 0
     while True:
-        print('1 - Add New Password \n2 - See Password \n3 - Update Password \n4 - Exit')
+        print('1 - Add New Password \n2 - See Password \n3 - Update Password \n4 - Backup Passwords \n5 - Exit')
         choice = int(input('\nChoice: '))
 
         if choice in options:
@@ -40,15 +40,28 @@ os.system('cls')
 utils.mainScreen()
 
 # Login
-print(utils.login(user, password, key))
+verified = utils.login(user, password, key)
 os.system('cls')
 
 # Show menu until program ends
 choice = 0
-while choice != 4:
+while choice != 5 and verified:
     os.system('cls')
     utils.mainScreen()
     choice = mainMenu()
+
+    if choice == 1:
+        utils.storeNewPassword()
+    elif choice == 2:
+        utils.readPassword()
+    elif choice == 3:
+        utils.updatePassword()
+    elif choice == 4:
+        utils.backupPasswords()
+    elif choice == 5:
+        break
+    else:
+        print('Invalid choice, try again')
 
 os.system('cls')
 print('Goodbye...')

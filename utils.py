@@ -21,6 +21,8 @@ def login(encryptedUser, encryptedPassword, key):
     attempts = 3
 
     while attempts > 0:
+        mainScreen()
+        
         user = input("User: ")
         password = input("Password: ")
 
@@ -85,6 +87,7 @@ def getPath():
     return path
 
 def mainScreen():
+    os.system('cls')
     print("""
             _  __           ____              _  
             | |/ /___ _   _ / ___|__ _ _ __ __| | 
@@ -94,7 +97,7 @@ def mainScreen():
                     |___/           
             """)
 
-def storePassword():
+def storeNewPassword():
     pass
 
 def readPassword():
@@ -104,4 +107,7 @@ def printPassword():
     pass
 
 def updatePassword():
+    pass
+
+def backupPasswords():
     pass
