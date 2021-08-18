@@ -45,7 +45,7 @@ os.system('cls')
 
 # Show menu until program ends
 choice = 0
-while choice != 5 and verified:
+while choice != 6 and verified:
     os.system('cls')
     utils.mainScreen()
     choice = mainMenu()

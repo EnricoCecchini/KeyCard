@@ -1,6 +1,7 @@
 import os
 import json
 import encryption
+import shutil
 from cryptography.fernet import Fernet
 
 # Generate key for encryption
@@ -219,4 +220,18 @@ def updatePassword(key):
     pass
 
 def backupPasswords():
-    pass
+    path = getPath()
+    backupPath = input('Backup Path: ')
+
+    if os.path.exists(backupPath):
+        backup = [f'{path}\key.txt', f'{path}\passwords.json']
+
+        for file in backup:
+            shutil.copy(file, backupPath)
+    
+        print('Files have been backed up at: ', backupPath)
+    
+    else:
+        print('Invalid Path')
+
+    input('Press ENTER to continue...')
