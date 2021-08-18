@@ -7,7 +7,7 @@ def mainMenu():
     options = [1,2,3,4,5,6]
     choice = 0
     while True:
-        print('1 - Add New Password \n2 - Print Platform Accounts \n3 - Print All Account Data\n4 - Update Password \n5 - Backup Passwords \n6 - Exit')
+        print('1 - Add New Account \n2 - Print Platform Accounts \n3 - Print All Account Data\n4 - Update Password \n5 - Backup Passwords \n6 - Exit')
         choice = int(input('\nChoice: '))
 
         if choice in options:
