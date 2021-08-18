@@ -161,9 +161,37 @@ def storeNewPassword(key):
     input('Press ENTER to continue...')
 
 # Print Account Infor stored in JSON
-def printPassword(key, platform):
+def searchPlatformAccounts(key, platform):
     mainScreen()
     print('Accounts for:', platform, '\n')
+    path = getPath()
+    
+    try:
+        # Load JSON
+        with open(f"{path.strip()}\passwords.json") as jsonFile:
+            passwordDB = json.load(jsonFile)
+
+            for account in passwordDB['accounts']:
+
+                if platform == account['Platform']:
+                    user, password = encryption.decrypt(bytes(account['User'], 'UTF-8'), bytes(account['Password'], 'UTF-8'), key)
+                
+                    # Print account data
+                    print('Platform:', account['Platform'])
+                    print('Username:', user)
+                    print('Password:', password) 
+
+                    print('')
+
+    except FileNotFoundError:
+        print("KeyError - No Passwords stored")
+    
+    input('Press ENTER to continue...')
+
+# Print Account info for specific platform stored in JSON
+def printAllAccounts(key):
+    mainScreen()
+    print('Accounts:')
     path = getPath()
     
     try:
