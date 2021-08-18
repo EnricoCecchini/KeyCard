@@ -40,7 +40,7 @@ if not os.path.isfile(f"{path}\passwords.json"):
 user, password = utils.readLogin(path)
 
 os.system('cls')
-utils.mainScreen()
+#utils.mainScreen()
 
 # Login
 verified = utils.login(user, password, key)
@@ -49,7 +49,7 @@ os.system('cls')
 # Show menu until program ends
 choice = 0
 while choice != 5 and verified:
-    #os.system('cls')
+    os.system('cls')
     utils.mainScreen()
     choice = mainMenu()
 

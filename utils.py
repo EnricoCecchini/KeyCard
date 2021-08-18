@@ -89,15 +89,11 @@ def getPath():
 
 def createJson(path):
     passwordDB = {}
-    passwordDB['accounts'] = {
-                "Platform": "URL",
-                "User": "Username",
-                "Password": "Password1"
-            }
+    passwordDB['account'] = {}
 
     passwordDB = json.dumps(passwordDB)
 
-    db = json.loads(passwordDB)
+    #db = json.loads(passwordDB)
 
     f = open(f"{path}\passwords.json", 'wb')
     f.write(bytes(passwordDB, 'utf-8'))
@@ -140,15 +136,28 @@ def storeNewPassword(key):
 
     with open(f"{path.strip()}\passwords.json", 'r+') as jsonFile:
         f = json.load(jsonFile)
-        
-        f["accounts"].append(credentials)
 
-        json.dump(f, jsonFile, indent=4)
+        #size = len(f)
 
-        passwordDB = json.load(jsonFile)
+        # f[f"account{size+1}"]["Platform"] = credentials["Platform"]
+        # f[f"account{size+1}"]["User"] = credentials["User"]
+        # f[f"account{size+1}"]["Password"] = credentials["Password"]
+
+        # json.dump(f, jsonFile, indent=4)
+
+        f.update(credentials)
+
+        passwordDB = json.dumps(f)
+
+
+        #passwordDB = json.load(jsonFile)
 
     print(passwordDB)
     print(type(passwordDB))
+
+    f = open(f"{path}\passwords.json", 'wb')
+    f.write(bytes(passwordDB, 'utf-8'))
+    f.close
 
     # with open('passwords.json') as file:
     #     json.dump(credentialsJSON, file)
@@ -175,14 +184,13 @@ def storeNewPassword(key):
 
 def printPassword(key, platform):
     path = getPath()
-    with open(f"{path.strip()}\passwords.json") as jsonFile:
-        f = json.loads(jsonFile.read())
-        passwordDB = json.loads(f)
+    with open(f"{path.strip()}\passwords.json", 'r+') as jsonFile:
+        passwordDB = json.load(jsonFile)
         
-        for credentials in passwordDB:
+        #for credentials in passwordDB:
             #user, password = encryption.decrypt(credentials["User"], credentials["Password"], key)
             #print(user, password)
-            print(credentials)
+            #print(credentials)
         #user, password = encryption.decrypt(passwords['User'], passwords['Password'], key)
         print(passwordDB)
         print(type(passwordDB))
