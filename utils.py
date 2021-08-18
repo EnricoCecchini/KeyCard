@@ -1,4 +1,5 @@
 import os
+import json
 import encryption
 from cryptography.fernet import Fernet
 
@@ -22,7 +23,7 @@ def login(encryptedUser, encryptedPassword, key):
 
     while attempts > 0:
         mainScreen()
-        
+
         user = input("User: ")
         password = input("Password: ")
 
@@ -86,8 +87,24 @@ def getPath():
 
     return path
 
+def createJson(path):
+    passwordDB = {}
+    passwordDB['accounts'] = {
+                "Platform": "URL",
+                "User": "Username",
+                "Password": "Password1"
+            }
+
+    passwordDB = json.dumps(passwordDB)
+
+    db = json.loads(passwordDB)
+
+    f = open(f"{path}\passwords.json", 'wb')
+    f.write(bytes(passwordDB, 'utf-8'))
+    f.close
+
 def mainScreen():
-    os.system('cls')
+    #os.system('cls')
     print("""
             _  __           ____              _  
             | |/ /___ _   _ / ___|__ _ _ __ __| | 
@@ -96,17 +113,88 @@ def mainScreen():
             |_|\_\___|\__, |\____\__,_|_|  \__,_| 
                     |___/           
             """)
+    
+def storeNewPassword(key):
+    path = getPath()
+    while True:
+        os.system('cls')
+        mainScreen()
 
-def storeNewPassword():
-    pass
+        url = input('Platform URL: ')
+        user = input('New User: ')
+        password = input('Password: ')
+        passwordConfirmation = input('Confirm password: ')
 
-def readPassword():
-    pass
+        if password == passwordConfirmation:
+            break
+        else: 
+            print('Passwords don\'t match, try again')
+    
+    userEnrcypted, passwordEncrypted = encryption.encrypt(user, password, key)
 
-def printPassword():
-    pass
+    credentials = {
+                "Platform": url,
+                "User": userEnrcypted.decode('UTF-8'),
+                "Password": passwordEncrypted.decode('UTF-8')
+            }
 
-def updatePassword():
+    with open(f"{path.strip()}\passwords.json", 'r+') as jsonFile:
+        f = json.load(jsonFile)
+        
+        f["accounts"].append(credentials)
+
+        json.dump(f, jsonFile, indent=4)
+
+        passwordDB = json.load(jsonFile)
+
+    print(passwordDB)
+    print(type(passwordDB))
+
+    # with open('passwords.json') as file:
+    #     json.dump(credentialsJSON, file)
+
+    # if not os.path.exists(f"{path.strip()}\passwords.json"):
+    #     print(getPath()+'\passwords.json')
+    #     credentialsJSON = json.dumps(credentials, indent=4)
+
+    #     with open(f"{path.strip()}\passwords.json", 'w') as file:
+    #         json.dump(credentialsJSON, file)
+    # else:
+    #     print("Adding new password")
+    #     print(f"{path.strip()}\passwords.json")
+
+    #     jsonFile = json.loads(f"{path.strip()}\passwords.json")
+    #     passwordDB = json.loads(jsonFile)
+    #     print(type(passwordDB))
+
+    #     passwordDB = jsonFile.append(credentials)
+    #     with open(f"{path.strip()}\passwords.json", 'w') as file:
+    #         json.dump(passwordDB, file)
+
+    input('Press ENTER to continue...')
+
+def printPassword(key, platform):
+    path = getPath()
+    with open(f"{path.strip()}\passwords.json") as jsonFile:
+        f = json.loads(jsonFile.read())
+        passwordDB = json.loads(f)
+        
+        for credentials in passwordDB:
+            #user, password = encryption.decrypt(credentials["User"], credentials["Password"], key)
+            #print(user, password)
+            print(credentials)
+        #user, password = encryption.decrypt(passwords['User'], passwords['Password'], key)
+        print(passwordDB)
+        print(type(passwordDB))
+
+        #passwords = json.loads(passwordDB)
+        #print(passwords)
+        #print(type(passwords))
+        #print(passwords['url'], user, password)
+    
+    input('Press ENTER to continue...')
+
+def updatePassword(key):
     pass
 
 def backupPasswords():

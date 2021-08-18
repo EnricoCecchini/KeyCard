@@ -33,6 +33,9 @@ if not os.path.isfile(f"{path}\login.txt"):
     print(str(user))
     print(str(password))
 
+if not os.path.isfile(f"{path}\passwords.json"):
+    utils.createJson(path)   
+
 # Get user and password for login
 user, password = utils.readLogin(path)
 
@@ -46,16 +49,17 @@ os.system('cls')
 # Show menu until program ends
 choice = 0
 while choice != 5 and verified:
-    os.system('cls')
+    #os.system('cls')
     utils.mainScreen()
     choice = mainMenu()
 
     if choice == 1:
-        utils.storeNewPassword()
+        utils.storeNewPassword(key)
     elif choice == 2:
-        utils.readPassword()
+        platform = input('Platform: ')
+        utils.printPassword(key, platform)
     elif choice == 3:
-        utils.updatePassword()
+        utils.updatePassword(key)
     elif choice == 4:
         utils.backupPasswords()
     elif choice == 5:
