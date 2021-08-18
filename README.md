@@ -5,11 +5,13 @@ Python program to store account data locally in a JSON file. Account User and Pa
 
 *Only Username and Password are encrypted, not the platform each account data belongs to*
 
+
 Features not implemented yet:
 
 -Update existing account data
 
 -Backup password and key files in new directory
+
 
 
 Instructions:
