@@ -136,7 +136,7 @@ def storeNewPassword(key):
 
     with open(f"{path.strip()}\passwords.json", 'r+') as jsonFile:
         f = json.load(jsonFile)
-
+    
         #size = len(f)
 
         # f[f"account{size+1}"]["Platform"] = credentials["Platform"]
@@ -147,7 +147,7 @@ def storeNewPassword(key):
 
         f.update(credentials)
 
-        passwordDB = json.dumps(f)
+        passwordDB = json.dumps(f, indent=4, sort_keys=True)
 
 
         #passwordDB = json.load(jsonFile)
@@ -183,22 +183,34 @@ def storeNewPassword(key):
     input('Press ENTER to continue...')
 
 def printPassword(key, platform):
+    mainScreen()
+    print('Accounts for:', platform, '\n')
     path = getPath()
-    with open(f"{path.strip()}\passwords.json", 'r+') as jsonFile:
-        passwordDB = json.load(jsonFile)
-        
-        #for credentials in passwordDB:
-            #user, password = encryption.decrypt(credentials["User"], credentials["Password"], key)
-            #print(user, password)
-            #print(credentials)
-        #user, password = encryption.decrypt(passwords['User'], passwords['Password'], key)
-        print(passwordDB)
-        print(type(passwordDB))
+    
+    try:
+        with open(f"{path.strip()}\passwords.json", 'r+') as jsonFile:
+            passwordDB = json.load(jsonFile)
+            
+            #for credentials in passwordDB:
+                #user, password = encryption.decrypt(credentials["User"], credentials["Password"], key)
+                #print(user, password)
+                #print(credentials)
+            user, password = encryption.decrypt(bytes(passwordDB['User'], 'UTF-8'), bytes(passwordDB['Password'], 'UTF-8'), key)
+            #print(passwordDB)
+            #print(type(passwordDB))
 
-        #passwords = json.loads(passwordDB)
-        #print(passwords)
-        #print(type(passwords))
-        #print(passwords['url'], user, password)
+            print('Platform:', passwordDB['Platform'])
+            print('Username:', user)
+            print('Password:', password) 
+
+            #passwords = json.loads(passwordDB)
+            #print(passwords)
+            #print(type(passwords))
+            #print(passwords['url'], user, password)
+    except json.decoder.JSONDecodeError:
+        print("No Passwords stored")
+    except KeyError:
+        print("No Passwords stored")
     
     input('Press ENTER to continue...')
 
