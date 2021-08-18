@@ -99,6 +99,7 @@ def createJson(path, credentials):
     with open('passwords.json', 'w') as file:
         json.dump(accounts, file, indent=4)
 
+# Print Logo
 def mainScreen():
     os.system('cls')
     print("""
@@ -110,6 +111,7 @@ def mainScreen():
                     |___/           
             """)
 
+# Store new account data in JSON
 def storeNewPassword(key):
     path = getPath()
     while True:
@@ -122,7 +124,7 @@ def storeNewPassword(key):
         password = input('Password: ')
         passwordConfirmation = input('Confirm password: ')
 
-        if password == passwordConfirmation:
+        if password == passwordConfirmation and user != '' or password != '' or url != '':
             break
         else: 
             print('Passwords don\'t match, try again')
@@ -158,6 +160,7 @@ def storeNewPassword(key):
 
     input('Press ENTER to continue...')
 
+# Print Account Infor stored in JSON
 def printPassword(key, platform):
     mainScreen()
     print('Accounts for:', platform, '\n')
@@ -165,40 +168,22 @@ def printPassword(key, platform):
     
     try:
         # Load JSON
-        with open(f"{path.strip()}\passwords.json", 'r+') as jsonFile:
+        with open(f"{path.strip()}\passwords.json") as jsonFile:
             passwordDB = json.load(jsonFile)
-            print(type(passwordDB))
 
-            for account in passwordDB:
-                print(account)
-                print(type(account))
-                
+            for account in passwordDB['accounts']:
+
+                user, password = encryption.decrypt(bytes(account['User'], 'UTF-8'), bytes(account['Password'], 'UTF-8'), key)
+            
+                # Print account data
+                print('Platform:', account['Platform'])
+                print('Username:', user)
+                print('Password:', password) 
+
                 print('')
-            
-            #for credentials in passwordDB:
-                #user, password = encryption.decrypt(credentials["User"], credentials["Password"], key)
-                #print(user, password)
-                #print(credentials)
 
-            # Debugging
-            print(passwordDB)
-            print(type(passwordDB))
-
-            # Decrypt user and password
-            user, password = encryption.decrypt(bytes(passwordDB['User'], 'UTF-8'), bytes(passwordDB['Password'], 'UTF-8'), key)
-            
-            # Print account data
-            print('Platform:', passwordDB['Platform'])
-            print('Username:', user)
-            print('Password:', password) 
-
-    # Exceptions if no passwords are stored
-    except json.decoder.JSONDecodeError:
-        print("No Passwords stored")
-    except KeyError:
-        print("No Passwords stored")
     except FileNotFoundError:
-        print("No Passwords stored")
+        print("KeyError - No Passwords stored")
     
     input('Press ENTER to continue...')
 
