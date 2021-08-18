@@ -10,9 +10,6 @@ Features not implemented yet:
 
 -Update existing account data
 
--Backup password and key files in new directory
-
-
 
 Instructions:
 
