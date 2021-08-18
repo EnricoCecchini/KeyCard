@@ -51,7 +51,6 @@ def getLogin():
         if password == confirmPassword:
             break
     
-    #user, password = encryption(user, password)
     return user, password
 
 # Store login credentials in file
@@ -73,9 +72,7 @@ def readLogin(path):
     with open(loginFilePath, 'rb') as f:        
         read = f.read()
 
-    #print("Read:", read)
     credentials = read.split(b',')
-    #print("Credentials:", credentials)
     user, password = credentials[0], credentials[1]
 
     return user, password
@@ -109,13 +106,14 @@ def mainScreen():
             |_|\_\___|\__, |\____\__,_|_|  \__,_| 
                     |___/           
             """)
-    
+
 def storeNewPassword(key):
     path = getPath()
     while True:
         os.system('cls')
         mainScreen()
 
+        # Get account data from user to store
         url = input('Platform URL: ')
         user = input('New User: ')
         password = input('Password: ')
@@ -126,14 +124,17 @@ def storeNewPassword(key):
         else: 
             print('Passwords don\'t match, try again')
     
+    # Encrypt user and password
     userEnrcypted, passwordEncrypted = encryption.encrypt(user, password, key)
 
+    # Store credentials in dictionary
     credentials = {
                 "Platform": url,
                 "User": userEnrcypted.decode('UTF-8'),
                 "Password": passwordEncrypted.decode('UTF-8')
             }
 
+    # Store credentials in JSON
     with open(f"{path.strip()}\passwords.json", 'r+') as jsonFile:
         f = json.load(jsonFile)
     
@@ -152,9 +153,11 @@ def storeNewPassword(key):
 
         #passwordDB = json.load(jsonFile)
 
+    # Debugging
     print(passwordDB)
     print(type(passwordDB))
 
+    # Store JSON data in file
     f = open(f"{path}\passwords.json", 'wb')
     f.write(bytes(passwordDB, 'utf-8'))
     f.close
@@ -188,6 +191,7 @@ def printPassword(key, platform):
     path = getPath()
     
     try:
+        # Load JSON
         with open(f"{path.strip()}\passwords.json", 'r+') as jsonFile:
             passwordDB = json.load(jsonFile)
             
@@ -195,18 +199,20 @@ def printPassword(key, platform):
                 #user, password = encryption.decrypt(credentials["User"], credentials["Password"], key)
                 #print(user, password)
                 #print(credentials)
+            
+            # Decrypt user and password
             user, password = encryption.decrypt(bytes(passwordDB['User'], 'UTF-8'), bytes(passwordDB['Password'], 'UTF-8'), key)
+
+            # Debugging
             #print(passwordDB)
             #print(type(passwordDB))
 
+            # Print account data
             print('Platform:', passwordDB['Platform'])
             print('Username:', user)
             print('Password:', password) 
 
-            #passwords = json.loads(passwordDB)
-            #print(passwords)
-            #print(type(passwords))
-            #print(passwords['url'], user, password)
+    # Exceptions if no passwords are stored
     except json.decoder.JSONDecodeError:
         print("No Passwords stored")
     except KeyError:
