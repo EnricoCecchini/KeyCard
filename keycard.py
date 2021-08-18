@@ -33,9 +33,6 @@ if not os.path.isfile(f"{path}\login.txt"):
     print(str(user))
     print(str(password))
 
-if not os.path.isfile(f"{path}\passwords.json"):
-    utils.createJson(path)   
-
 # Get user and password for login
 user, password = utils.readLogin(path)
 
