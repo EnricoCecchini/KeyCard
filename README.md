@@ -1,4 +1,4 @@
-# LunchBox
+# KeyCard
 Locally stored password Manager
 
 Python program to store account data locally in a JSON file. Account User and Passwords are encrypted using the Fernet cryptography module. A unique key is generated when the program is first run, which is required to decrypt account data.
