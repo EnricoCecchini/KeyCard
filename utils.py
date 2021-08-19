@@ -217,13 +217,52 @@ def printAllAccounts(key):
     input('Press ENTER to continue...')
 
 def updatePassword(key):
-    pass
+    mainScreen()
+    platform = input('Update account for platform: ')
+    updatedUser = input('Username: ')
+
+    path = getPath()
+
+    try:
+        # Load JSON
+        with open(f"{path.strip()}\passwords.json") as jsonFile:
+            passwordDB = json.load(jsonFile)
+
+            for account in passwordDB['accounts']:
+                tries = 3
+                if platform == account['Platform']:
+                    user, password = encryption.decrypt(bytes(account['User'], 'UTF-8'), bytes(account['Password'], 'UTF-8'), key)
+                
+                    # Print account data
+                    if user == updatedUser:
+                        while tries >= 0:
+                            #mainScreen()
+                            print(f"Updating password for {account['Platform']} for user: {user}")
+                            newPassword = input('New Password: ')
+                            newPasswordConfirm = input('Confirm Password: ')
+
+                            if newPassword == newPasswordConfirm:
+                                account['Password'] = newPassword
+                                print('Password updated succesfully!')
+                                break
+                            else:
+                                print('Passwords don\'t match')
+                                tries -= 1
+
+    except FileNotFoundError:
+        print("KeyError - No Passwords stored")
+    
+    input('Press ENTER to continue...')
+    
+
 
 def backupPasswords():
     path = getPath()
+
+    print('To cancel leave Backup Path blank')
     backupPath = input('Backup Path: ')
 
-    if os.path.exists(backupPath):
+    if os.path.exists(backupPath) and backupPath != '':
         backup = [f'{path}\key.txt', f'{path}\passwords.json']
 
         for file in backup:
