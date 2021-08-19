@@ -242,12 +242,16 @@ def updatePassword(key):
                             newPasswordConfirm = input('Confirm Password: ')
 
                             if newPassword == newPasswordConfirm:
-                                account['Password'] = newPassword
+                                userEncrypted, passwordEncrypted = encryption.encrypt(user, newPassword, key)
+                                account['Password'] = passwordEncrypted.decode('UTF-8')
                                 print('Password updated succesfully!')
                                 break
                             else:
                                 print('Passwords don\'t match')
                                 tries -= 1
+        
+        with open('passwords.json', 'w') as jsonFile:
+            json.dump(passwordDB, jsonFile, indent=4)
 
     except FileNotFoundError:
         print("KeyError - No Passwords stored")
