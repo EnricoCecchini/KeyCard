@@ -9,7 +9,7 @@ Python program to store account data locally in a JSON file. Account User and Pa
 
 Instructions:
 
-Paste PATH to store passwords in config.txt
+Replace PATH in config.txt for where you want to save the password Database
 
 Run KeyCard.py
 
