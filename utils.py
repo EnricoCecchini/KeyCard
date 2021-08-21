@@ -3,6 +3,7 @@ import json
 import encryption
 import shutil
 from cryptography.fernet import Fernet
+from getpass import getpass
 
 # Generate key for encryption
 def makeKey(path):
@@ -26,7 +27,7 @@ def login(encryptedUser, encryptedPassword, key):
         mainScreen()
 
         user = input("User: ")
-        password = input("Password: ")
+        password = getpass("Password: ")
 
         # Decrypt User and Password for validation
         validUser, validPassword = encryption.decrypt(encryptedUser, encryptedPassword, key)
@@ -46,8 +47,8 @@ def login(encryptedUser, encryptedPassword, key):
 def getLogin():
     while True:
         user = input("New User: ")
-        password = input("Password: ")
-        confirmPassword = input("Confirm password: ")
+        password = getpass("Password: ")
+        confirmPassword = getpass("Confirm password: ")
 
         if password == confirmPassword:
             break
@@ -80,10 +81,12 @@ def readLogin(path):
 
 # Get login data PATH from config file
 def getPath():
-    f = open("config.txt", 'r')
-    path = f.read()
+    if (os.path.isfile('./config.txt/')):
+        f = open("config.txt", 'r')
+        return f.read()
+    return(os.getcwd())
 
-    return path
+    
 
 # Create new JSON file
 def createJson(path, credentials):
@@ -122,8 +125,8 @@ def storeNewPassword(key):
         # Get account data from user to store
         url = input('Platform URL: ')
         user = input('New User: ')
-        password = input('Password: ')
-        passwordConfirmation = input('Confirm password: ')
+        password = getpass('Password: ')
+        passwordConfirmation = getpass('Confirm password: ')
 
         if password == passwordConfirmation and user != '' or password != '' or url != '':
             break
@@ -238,8 +241,8 @@ def updatePassword(key):
                         while tries >= 0:
                             #mainScreen()
                             print(f"Updating password for {account['Platform']} for user: {user}")
-                            newPassword = input('New Password: ')
-                            newPasswordConfirm = input('Confirm Password: ')
+                            newPassword = getpass('New Password: ')
+                            newPasswordConfirm = getpass('Confirm Password: ')
 
                             if newPassword == newPasswordConfirm:
                                 userEncrypted, passwordEncrypted = encryption.encrypt(user, newPassword, key)
