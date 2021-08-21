@@ -104,7 +104,7 @@ def createJson(path, credentials):
 def mainScreen():
     os.system('cls')
     print("""
-            _  __           ____              _  
+             _  __           ____              _  
             | |/ /___ _   _ / ___|__ _ _ __ __| | 
             | ' // _ \ | | | |   / _` | '__/ _` | 
             | . \  __/ |_| | |__| (_| | | | (_| | 
