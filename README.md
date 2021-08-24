@@ -9,17 +9,15 @@ Python program to store account data locally in a JSON file. Account User and Pa
 
 **Instructions:**
 
-1. Paste PATH to store passwords in config.txt
+1. Run KeyCard.py
 
-2. Run KeyCard.py
+2. Create user and password for program
 
-3. Create user and password for program
-
-4. Add new Account data (a JSON file is generated on first run which will store encrypted account data)
+3. Add new Account data (a JSON file is generated on first run which will store encrypted account data)
 
 
 
-**Bonus:**
+**Optional:**
 
 You may have your login info stored somewhere else as long as you specify the desired directory inside an *'config.txt'* file.
 
