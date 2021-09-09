@@ -5,28 +5,32 @@ import shutil
 from cryptography.fernet import Fernet
 from getpass import getpass
 
+
 # Generate key for encryption
 def makeKey(path):
     key = Fernet.generate_key()
-    file = open('key.txt', 'wb')
-    file.write(key)
-    file.close
+    with open('key.txt', 'wb') as file:
+        file.write(key)
+        file.close()
+
 
 # Read key from file
 def readKey(path):
-    with open('key.txt', 'rb') as f:        
+    with open('key.txt', 'rb') as f:
         key = f.read()
-    
+
     return key
+
 
 # Login user
 def login(encryptedUser, encryptedPassword, key):
+    # sourcery skip: for-index-underscore, remove-unnecessary-else, while-to-for
     attempts = 3
 
     while attempts > 0:
         mainScreen()
 
-        user = input("User: ")
+        user = input("Username: ")
         password = getpass("Password: ")
 
         # Decrypt User and Password for validation
@@ -43,35 +47,36 @@ def login(encryptedUser, encryptedPassword, key):
     print('Access Denied')
     return False
 
+
 # Get login data from new user
 def getLogin():
     while True:
-        user = input("New User: ")
+        user = input("New Username: ")
         password = getpass("Password: ")
         confirmPassword = getpass("Confirm password: ")
 
         if password == confirmPassword:
             break
-    
+
     return user, password
+
 
 # Store login credentials in file
 def storeLogin(user, password, path, key):
     loginFilePath = f"{path.strip()}\login.txt"
     print(loginFilePath)
-    f = open(loginFilePath, 'wb')
+    with open(loginFilePath, 'wb') as f:
+        # Encrypt LogIn user and password before saving them in file
+        encryptedUser, encryptedPassword = encryption.encrypt(user, password, key)
+        f.write(encryptedUser)
+        f.write(b',')
+        f.write(encryptedPassword)
 
-    # Encrypt LogIn user and password before saving them in file
-    encryptedUser, encryptedPassword = encryption.encrypt(user, password, key)
-    f.write(encryptedUser)
-    f.write(b',')
-    f.write(encryptedPassword)
-    f.close
 
 # Read Login credentials from login file
 def readLogin(path):
     loginFilePath = f"{path.strip()}\login.txt"
-    with open(loginFilePath, 'rb') as f:        
+    with open(loginFilePath, 'rb') as f:
         read = f.read()
 
     credentials = read.split(b',')
@@ -79,14 +84,14 @@ def readLogin(path):
 
     return user, password
 
+
 # Get login data PATH from config file
 def getPath():
-    if (os.path.isfile('./config.txt/')):
+    if os.path.isfile('./config.txt/'):
         f = open("config.txt", 'r')
         return f.read()
-    return(os.getcwd())
+    return os.getcwd()
 
-    
 
 # Create new JSON file
 def createJson(path, credentials):
@@ -103,6 +108,7 @@ def createJson(path, credentials):
     with open('passwords.json', 'w') as file:
         json.dump(accounts, file, indent=4)
 
+
 # Print Logo
 def mainScreen():
     os.system('cls')
@@ -114,6 +120,7 @@ def mainScreen():
             |_|\_\___|\__, |\____\__,_|_|  \__,_| 
                     |___/           
             """)
+
 
 # Store new account data in JSON
 def storeNewPassword(key):
@@ -130,22 +137,22 @@ def storeNewPassword(key):
 
         if password == passwordConfirmation and user != '' or password != '' or url != '':
             break
-        else: 
+        else:
             print('Passwords don\'t match, try again')
-    
+
     # Encrypt user and password
-    userEnrcypted, passwordEncrypted = encryption.encrypt(user, password, key)
+    userEncrypted, passwordEncrypted = encryption.encrypt(user, password, key)
 
     # Store credentials in dictionary
     credentials = {
-                "Platform": url,
-                "User": userEnrcypted.decode('UTF-8'),
-                "Password": passwordEncrypted.decode('UTF-8')
-            }
-    
+        "Platform": url,
+        "User": userEncrypted.decode('UTF-8'),
+        "Password": passwordEncrypted.decode('UTF-8')
+    }
+
     # Create new JSON if no file exists or if empty
     if not os.path.isfile(f"{path}\passwords.json") or os.stat(f"{path}\passwords.json").st_size == 0:
-        createJson(path, credentials)   
+        createJson(path, credentials)
 
     else:
         # Open JSON to read data already stored
@@ -164,12 +171,13 @@ def storeNewPassword(key):
 
     input('Press ENTER to continue...')
 
-# Print Account Infor stored in JSON
+
+# Print Account Information stored in JSON
 def searchPlatformAccounts(key, platform):
     mainScreen()
     print('Accounts for:', platform, '\n')
     path = getPath()
-    
+
     try:
         # Load JSON
         with open(f"{path.strip()}\passwords.json") as jsonFile:
@@ -178,46 +186,49 @@ def searchPlatformAccounts(key, platform):
             for account in passwordDB['accounts']:
 
                 if platform == account['Platform']:
-                    user, password = encryption.decrypt(bytes(account['User'], 'UTF-8'), bytes(account['Password'], 'UTF-8'), key)
-                
+                    user, password = encryption.decrypt(bytes(account['User'], 'UTF-8'),
+                                                        bytes(account['Password'], 'UTF-8'), key)
+
                     # Print account data
                     print('Platform:', account['Platform'])
                     print('Username:', user)
-                    print('Password:', password) 
+                    print('Password:', password)
 
                     print('')
 
     except FileNotFoundError:
         print("KeyError - No Passwords stored")
-    
+
     input('Press ENTER to continue...')
+
 
 # Print Account info for specific platform stored in JSON
 def printAllAccounts(key):
     mainScreen()
     print('Accounts:')
     path = getPath()
-    
+
     try:
         # Load JSON
         with open(f"{path.strip()}\passwords.json") as jsonFile:
             passwordDB = json.load(jsonFile)
 
             for account in passwordDB['accounts']:
+                user, password = encryption.decrypt(bytes(account['User'], 'UTF-8'),
+                                                    bytes(account['Password'], 'UTF-8'), key)
 
-                user, password = encryption.decrypt(bytes(account['User'], 'UTF-8'), bytes(account['Password'], 'UTF-8'), key)
-            
                 # Print account data
                 print('Platform:', account['Platform'])
                 print('Username:', user)
-                print('Password:', password) 
+                print('Password:', password)
 
                 print('')
 
     except FileNotFoundError:
         print("KeyError - No Passwords stored")
-    
+
     input('Press ENTER to continue...')
+
 
 def updatePassword(key):
     mainScreen()
@@ -234,12 +245,13 @@ def updatePassword(key):
             for account in passwordDB['accounts']:
                 tries = 3
                 if platform == account['Platform']:
-                    user, password = encryption.decrypt(bytes(account['User'], 'UTF-8'), bytes(account['Password'], 'UTF-8'), key)
-                
+                    user, password = encryption.decrypt(bytes(account['User'], 'UTF-8'),
+                                                        bytes(account['Password'], 'UTF-8'), key)
+
                     # Print account data
                     if user == updatedUser:
                         while tries >= 0:
-                            #mainScreen()
+                            # mainScreen()
                             print(f"Updating password for {account['Platform']} for user: {user}")
                             newPassword = getpass('New Password: ')
                             newPasswordConfirm = getpass('Confirm Password: ')
@@ -247,20 +259,19 @@ def updatePassword(key):
                             if newPassword == newPasswordConfirm:
                                 userEncrypted, passwordEncrypted = encryption.encrypt(user, newPassword, key)
                                 account['Password'] = passwordEncrypted.decode('UTF-8')
-                                print('Password updated succesfully!')
+                                print('Password updated successfully!')
                                 break
                             else:
                                 print('Passwords don\'t match')
                                 tries -= 1
-        
+
         with open('passwords.json', 'w') as jsonFile:
             json.dump(passwordDB, jsonFile, indent=4)
 
     except FileNotFoundError:
         print("KeyError - No Passwords stored")
-    
+
     input('Press ENTER to continue...')
-    
 
 
 def backupPasswords():
@@ -274,9 +285,9 @@ def backupPasswords():
 
         for file in backup:
             shutil.copy(file, backupPath)
-    
+
         print('Files have been backed up at: ', backupPath)
-    
+
     else:
         print('Invalid Path')
 

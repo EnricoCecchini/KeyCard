@@ -1,5 +1,5 @@
 from cryptography.fernet import Fernet
-import os
+
 
 # Encrypt user and password
 def encrypt(user, password, key):
@@ -9,6 +9,7 @@ def encrypt(user, password, key):
     encryptedPassword = f.encrypt(bytes(password, 'utf-8'))
 
     return encryptedUser, encryptedPassword
+
 
 # decrypt user and password
 def decrypt(encryptedUser, encryptedPassword, key):
