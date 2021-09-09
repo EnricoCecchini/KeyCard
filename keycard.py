@@ -1,33 +1,35 @@
-import json
-import utils
 import os
+import utils
+
 
 # Print option menu
 def mainMenu():
-    options = [1,2,3,4,5,6]
-    choice = 0
+    global choice
+    options = [1, 2, 3, 4, 5, 6]
     while True:
-        print('1 - Add New Account \n2 - Print Platform Accounts \n3 - Print All Account Data\n4 - Update Password \n5 - Backup Passwords \n6 - Exit')
+        print(
+            '1 - Add New Account \n2 - Print Platform Accounts \n3 - Print All Account Data\n4 - Update Password \n5 - Backup Passwords \n6 - Exit')
         choice = int(input('\nChoice: '))
 
         if choice in options:
             break
         else:
             print('Invalid Choice, try again!')
-    
+
     return choice
+
 
 # Get login and password location PATH
 path = utils.getPath().strip()
 
 # Generate key if it's first time running
-if not os.path.isfile(f"{path}\key.txt"):        
+if not os.path.isfile(f"{path}\key.txt"):
     utils.makeKey(path)
 
 key = utils.readKey(path)
 
 # Generate Login data file if first time running
-if not os.path.isfile(f"{path}\login.txt"):        
+if not os.path.isfile(f"{path}\login.txt"):
     user, password = utils.getLogin()
     utils.storeLogin(str(user), str(password), path, key)
     print(str(user))
@@ -37,7 +39,7 @@ if not os.path.isfile(f"{path}\login.txt"):
 user, password = utils.readLogin(path)
 
 os.system('cls')
-#utils.mainScreen()
+# utils.mainScreen()
 
 # Login
 verified = utils.login(user, password, key)
@@ -56,7 +58,7 @@ while choice != 6 and verified:
         platform = input('Platform: ')
         utils.searchPlatformAccounts(key, platform)
     elif choice == 3:
-        utils.printAllAccounts(key)    
+        utils.printAllAccounts(key)
     elif choice == 4:
         utils.updatePassword(key)
     elif choice == 5:
@@ -68,4 +70,3 @@ while choice != 6 and verified:
 
 os.system('cls')
 print('Goodbye...')
-
