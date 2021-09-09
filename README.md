@@ -3,21 +3,25 @@ Locally stored password Manager
 
 Python program to store account data locally in a JSON file. Account User and Passwords are encrypted using the Fernet cryptography module. A unique key is generated when the program is first run, which is required to decrypt account data.
 
-*Only Username and Password are encrypted, not the platform each account data belongs to*
+*Only Username and Password are encrypted, not the platform each account data belongs to*.
 
 
 
-Instructions:
+**Instructions:**
 
-Replace PATH in config.txt for where you want to save the password Database
+1. Run KeyCard.py
 
-Run KeyCard.py
+2. Create user and password for program
 
-Create user and password for program
-
-Add new Account data (a JSON file is generated on first run which will store encrypted account data)
+3. Add new Account data (a JSON file is generated on first run which will store encrypted account data)
 
 
 
-*This program requires the cryptography modeule to operate*
+**Optional:**
+
+You may have your login info stored somewhere else as long as you specify the desired directory inside an *'config.txt'* file.
+
+
+
+*This program requires the cryptography module to operate*.
 
