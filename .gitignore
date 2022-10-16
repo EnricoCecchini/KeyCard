@@ -2,3 +2,4 @@
 /login.txt
 /passwords.json
 __pycache__/
+env/

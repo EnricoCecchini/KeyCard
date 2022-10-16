@@ -1,0 +1,5 @@
+cffi==1.15.1
+cryptography==38.0.1
+fernet==1.0.1
+pyaes==1.6.1
+pycparser==2.21
